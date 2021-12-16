@@ -23,12 +23,24 @@ class HDBConn:
     def orderItems(self, orderList):
 
         orderCost = 0
-        for id, name, q, ppq in orderList:
-            query = f"update {HDBConn.inventory_table} set quantity = quantity + {q} where id = '{id}'"
+        for id, q, ppq in orderList:
+            query = f"update {HDBConn.inventory_table} set quantity = quantity + {int(q)} where id = '{id}'"
             self.cursor.execute(query)
-            orderCost += ppq * q
+            orderCost += ppq * int(q)
 
         self.conn.commit()
+
+        return orderCost
+
+    def calculateOrderCost(self, orderList):
+        orderCost = 0
+        for id, q, ppq in orderList:
+            query = f'select ppq from {HDBConn.inventory_table} where id = "{id}"'
+            self.cursor.execute(query)
+            ppq = self.cursor.fetchall()[0][0]
+            orderCost += ppq*q
+
+        print(orderCost)
         return orderCost
 
     def discardItems(self, discardList):
