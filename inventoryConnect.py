@@ -46,19 +46,18 @@ class HDBConn:
     def discardItems(self, discardList):
 
         # discardCost = 0
-        for id, q in discardList:
-            query = f"update {HDBConn.inventory_table} set quantity = quantity - {q} where id = '{id}'"
+        for id, q, _ in discardList:
+            query = f"update {HDBConn.inventory_table} set quantity = quantity - {int(q)} where id = '{id}'"
             self.cursor.execute(query)
             # discardCost += ppq * q
 
         self.conn.commit()
         # return discardCost
 
-    def changeItemPPQ(self, changeList):
+    def changeItemPPQ(self, id, ppq):
 
-        for id, name, q, ppq in changeList:
-            query = f"update {HDBConn.inventory_table} set ppq = {ppq} where id = '{id}'"
-            self.cursor.execute(query)
+        query = f"update {HDBConn.inventory_table} set ppq = {ppq} where id = '{id}'"
+        self.cursor.execute(query)
 
         self.conn.commit()
         return True
