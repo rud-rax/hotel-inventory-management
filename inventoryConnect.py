@@ -46,7 +46,7 @@ class HDBConn:
     def discardItems(self, discardList):
 
         # discardCost = 0
-        for id, q, _ in discardList:
+        for id, q in discardList:
             query = f"update {HDBConn.inventory_table} set quantity = quantity - {int(q)} where id = '{id}'"
             self.cursor.execute(query)
             # discardCost += ppq * q

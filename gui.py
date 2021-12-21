@@ -3,6 +3,7 @@ from tkinter import messagebox
 from PIL import ImageTk, Image
 import mysql.connector as myc
 import inventoryConnect as ic
+import recipeConnect as ric
 
 # DATABASE VARIABLES
 lhost = "localhost"
@@ -18,7 +19,7 @@ hotelconn = myc.connect(
 rc = ic.Recipe(hotelconn)
 
 root = Tk()
-root.geometry('900x900+10+10')
+root.geometry('1600x900+10+10')
 root.title('HOTEL INVENTORY')
 root.iconbitmap(r"images/hotel4.ico")
 
@@ -229,96 +230,127 @@ ppq_button.grid(row=1, column=0, columnspan=2,
 
 
 # RECIPE FRAME
-# y_start -= 120
-# x_start += 330
+
+recipeOrderList = []
 
 
-# recipe_frame = LabelFrame(root, text='Recipes',
-#                           padx=label_pad[0], pady=label_pad[1])
-# recipe_frame.place(x=x_start, y=y_start)
+class RecipeItem():
+    def __init__(self, id, name, row):
+        self.id = id
+        self.name = name
 
-# rl1 = Label(recipe_frame, text='Mashroom Masala Curry')
-# rl1.grid(row=1, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
-# rl1i = Button(recipe_frame, text=" + ", width=3)
-# rl1i.grid(row=1, column=1, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
-# rl1d = Button(recipe_frame, text=" - ", width=3)
-# rl1d.grid(row=1, column=2, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
-# rl1e = Entry(recipe_frame)
-# rl1e.grid(row=1, column=3, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
+        self.recipeLabel = Label(recipe_frame, text=self.name)
+        self.recipeLabel.grid(row=row, column=0)
 
-# rl2 = Label(recipe_frame, text='Aloo Matar')
-# rl2.grid(row=2, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
+        # self.increaseButton = Button(recipe_frame, text=" + ",
+        #                              width=3, command=self.increaseQ)
+        # self.increaseButton.grid(row=row, column=1,
+        #                          padx=stock_unit_pad[0], pady=stock_unit_pad[1])
 
-# rl3 = Label(recipe_frame, text='Palak Paneer')
-# rl3.grid(row=3, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
+        # self.decreaseButton = Button(recipe_frame, text=" - ",
+        #                              width=3, command=self.decreseQ)
+        # self.decreaseButton.grid(row=row, column=2,
+        #                          padx=stock_unit_pad[0], pady=stock_unit_pad[1])
 
-# rl4 = Label(recipe_frame, text='Fish Fry')
-# rl4.grid(row=4, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
+        self.quantityEntry = Entry(recipe_frame)
+        self.quantityEntry.grid(row=row, column=1,
+                                padx=stock_unit_pad[0], pady=stock_unit_pad[1])
 
-# rl5 = Label(recipe_frame, text='Tandoori Chicken')
-# rl5.grid(row=5, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
+        self.addButton = Button(
+            recipe_frame, text='ADD', command=self.print_id)
+        self.addButton.grid(row=row, column=2,
+                            padx=stock_unit_pad[0], pady=stock_unit_pad[1])
 
+        self.refresh_recipe()
 
-# rl6 = Label(recipe_frame, text='Fish Curry')
-# rl6.grid(row=6, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
+    def refresh_recipe(self):
+        self.q = 0
+        self.quantityEntry.delete(0, last=len(self.quantityEntry.get()))
+        self.quantityEntry.insert(0, 0)
 
-# rl7 = Label(recipe_frame, text='Chicken Masala')
-# rl7.grid(row=7, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
+    def print_id(self):
+        self.q = self.quantityEntry.get()
+        print(f"{self.id} -  {self.name} --> {self.q}")
+        recipeOrderList.append((self.id, self.q))
 
-# rl8 = Label(recipe_frame, text='Egg Masala Curry')
-# rl8.grid(row=8, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
+    # def increaseQ(self):
+    #     self.q = int(self.quantityEntry.get())
+    #     self.q += 1
+    #     self.quantityEntry.delete(0)
+    #     self.quantityEntry.insert(0, self.q)
 
-# rl9 = Label(recipe_frame, text='Chicken Chilli')
-# rl9.grid(row=9, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
-
-# rl10 = Label(recipe_frame, text='Chicken Tikka')
-# rl10.grid(row=10, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
-
-
-# rl11 = Label(recipe_frame, text='Chicken Dum Biryani')
-# rl11.grid(row=11, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
-
-# rl12 = Label(recipe_frame, text='Kadhai Paneer')
-# rl12.grid(row=12, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
-
-# rl13 = Label(recipe_frame, text='Shahi Paneer')
-# rl13.grid(row=13, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
-
-# rl14 = Label(recipe_frame, text='Veg Pulao')
-# rl14.grid(row=14, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
-
-# rl15 = Label(recipe_frame, text='Mix Veg')
-# rl15.grid(row=15, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
+    # def decreseQ(self):
+    #     self.q = int(self.quantityEntry.get())
+    #     self.q -= 1
+    #     self.quantityEntry.delete(0)
+    #     self.quantityEntry.insert(0, self.q)
 
 
-# rl16 = Label(recipe_frame, text='Dal Tadka')
-# rl16.grid(row=16, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
-
-# rl17 = Label(recipe_frame, text='Veg Kolhapuri')
-# rl17.grid(row=17, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
-
-# rl18 = Label(recipe_frame, text='Paneer Do Pyaza')
-# rl18.grid(row=18, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
-
-# rl19 = Label(recipe_frame, text='Paneer Bhurji')
-# rl19.grid(row=19, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
-
-# rl20 = Label(recipe_frame, text='Matar Paneer')
-# rl20.grid(row=20, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
+y_start -= 120
+x_start += 330
 
 
-# rl21 = Label(recipe_frame, text='Garlic Naan')
-# rl21.grid(row=21, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
+recipe_frame = LabelFrame(root, text='Recipes',
+                          padx=label_pad[0], pady=label_pad[1])
+recipe_frame.place(x=x_start, y=y_start)
 
-# rl22 = Label(recipe_frame, text='Pyaaz Paratha')
-# rl22.grid(row=22, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
+r = ric.Recipes(hotelconn)
 
-# rl23 = Label(recipe_frame, text='Bhindi Masala')
-# rl23.grid(row=23, column=0, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
+i = 0
+recipeAllList = []
+for recipe in r.getRecipes():
+
+    id, name, type, rh, mk, tp = recipe
+
+    re1 = RecipeItem(id, name, i)
+    recipeAllList.append(re1)
+    i += 1
 
 
-# recipe_button = Button(recipe_frame, text='Make', width=55)
-# recipe_button.grid(
-#     row=0, column=0, columnspan=4, padx=label_pad[0], pady=label_pad[1])
+def generateRecipeOrder(orderRecipeList):
+
+    inventory = rc.displayInventory()
+
+    s = True
+    total_cost = 0
+    for id, q in orderRecipeList:
+        q = int(q)
+        print(f'{id} - {q}')
+        r1 = ic.Recipe(hotelconn)
+        r1.getDetails(id)
+        total_cost += r1.details['price']*q
+        for n in range(1, q+1):
+            if r1.checkRecipeIngredients():
+                r1.order(id)
+                print(f"ORDERED {n} time")
+            else:
+                messagebox.showerror('Error !', 'Not enough Ingredients !')
+
+                s = False
+                break
+
+    if s == True:
+        messagebox.showinfo('Bill', f'Order Total --> {total_cost}')
+        inventory = rc.displayInventory()
+        updateInventory(inventory)
+
+
+def refreshList():
+    recipeOrderList = []
+    updateInventory(rc.displayInventory())
+    for re in recipeAllList:
+        re.refresh_recipe()
+
+
+orderRecipe = Button(recipe_frame, text='ORDER RECIPES',
+                     command=lambda: generateRecipeOrder(recipeOrderList), width=45)
+orderRecipe.grid(row=i, column=0, columnspan=3,
+                 padx=stock_unit_pad[0], pady=stock_unit_pad[1])
+i += 1
+refreshButton = Button(recipe_frame, text='REFRESH',
+                       command=refreshList, width=45)
+refreshButton.grid(row=i, column=0, columnspan=3,
+                   padx=stock_unit_pad[0], pady=stock_unit_pad[1])
+
 
 root.mainloop()
