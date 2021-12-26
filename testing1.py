@@ -109,8 +109,15 @@ def testLowItems():
     print(rc1.checkLowItems())
 
 
+def testgetNewRecipeId():
+    print(rc1.getNewRecipeId())
+
 # orderRecipe(1)
 
-testLowItems()
+# testLowItems()
+
+
+testgetNewRecipeId()
+
 
 hotelconn.close()

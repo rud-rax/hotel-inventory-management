@@ -46,6 +46,7 @@ class HDBConn:
     def discardItems(self, discardList):
 
         # discardCost = 0
+        print('discard list --> ', discardList)
         for id, q in discardList:
             query = f"update {HDBConn.inventory_table} set quantity = quantity - {int(q)} where id = '{id}'"
             self.cursor.execute(query)
@@ -112,14 +113,14 @@ class Recipe(HDBConn):
         return hash
 
     def getHash2Recipe(self):
-        recipe = ""
-
+        print('recipe hash --. ', self.details['recipe_hash'])
         recipe_ingredients = self.details['recipe_hash'].split('+')
         for ind in recipe_ingredients:
             id, q = ind.split('*')
             self.ingredients.append((id, int(q)))
             #recipeList.append((id, int(q)))
         # return recipeList
+        print('Self ingredients --> ', self.ingredients)
         return self.ingredients
 
     def getDetails(self, id):
@@ -142,7 +143,7 @@ class Recipe(HDBConn):
 
     def order(self, id):
 
-        self.getDetails(id)
+        # self.getDetails(id)
         if self.checkRecipeIngredients():
             self.discardItems(self.ingredients)
 
@@ -173,6 +174,26 @@ class Recipe(HDBConn):
                 return False
 
         return True
+
+    def addRecipe(self, values):
+
+        id = self.getNewRecipeId()
+
+        # id ,name , type ,rc , mk , tp
+        valstr = f"({id} ,'{values[0]}','{values[1]}','{values[2]}',{values[3]},{values[4]}) ;"
+        query = f'insert into {Recipe.recipe_table} values {valstr}'
+        print(query)
+        self.cursor.execute(query)
+        self.conn.commit()
+
+    def getNewRecipeId(self):
+
+        query = f'select id from {Recipe.recipe_table} order by id desc limit 1'
+        self.cursor.execute(query)
+        lastid = self.cursor.fetchall()[0][0]
+        # print(lastid)
+
+        return lastid + 1
 
 
 if __name__ == "__main__":
