@@ -113,14 +113,14 @@ class Recipe(HDBConn):
         return hash
 
     def getHash2Recipe(self):
-        print('recipe hash --. ', self.details['recipe_hash'])
+        # print('recipe hash --. ', self.details['recipe_hash'])
         recipe_ingredients = self.details['recipe_hash'].split('+')
         for ind in recipe_ingredients:
             id, q = ind.split('*')
             self.ingredients.append((id, int(q)))
             #recipeList.append((id, int(q)))
         # return recipeList
-        print('Self ingredients --> ', self.ingredients)
+        # print('Self ingredients --> ', self.ingredients)
         return self.ingredients
 
     def getDetails(self, id):
@@ -182,7 +182,7 @@ class Recipe(HDBConn):
         # id ,name , type ,rc , mk , tp
         valstr = f"({id} ,'{values[0]}','{values[1]}','{values[2]}',{values[3]},{values[4]}) ;"
         query = f'insert into {Recipe.recipe_table} values {valstr}'
-        print(query)
+        # print(query)
         self.cursor.execute(query)
         self.conn.commit()
 

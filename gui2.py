@@ -2,7 +2,7 @@ from os import name
 from tkinter import *
 from tkinter import messagebox
 from PIL import ImageTk, Image
-from datetime import date
+import manageLogs as mL
 import mysql.connector as myc
 import inventoryConnect as ic
 import recipeConnect as ric
@@ -18,6 +18,7 @@ hotelconn = myc.connect(
     host=lhost, user=luser, passwd=lpasswd, database=database_name
 )
 
+# BACKEND CODE
 rc = ic.Recipe(hotelconn)
 
 root = Tk()
@@ -25,6 +26,8 @@ root.geometry('1600x900+10+10')
 root.title('HOTEL INVENTORY')
 root.iconbitmap(r"images/hotel4.ico")
 
+
+lg = mL.HotelLog()
 
 x_start = 20
 y_start = 10
@@ -61,7 +64,7 @@ def orderItems():
     print('ORDER FUNCTION ---- ')
 
     orderlist = list(item_dict.values())
-    print(orderlist)
+    # print(orderlist)
 
     totalCost = rc.orderItems(orderlist)
     inventory = rc.displayInventory()
@@ -76,6 +79,11 @@ def orderItems():
         updateInventory(inventory)
 
     else:
+
+        neworderList = [[id, int(q), float(ppq)]
+                        for id, q, ppq in orderlist if int(q) > 0]
+        print(neworderList)
+        lg.addOrderLog(neworderList)
 
         # ADD REPORT CODE HERE
         pass
@@ -317,7 +325,9 @@ def openRecipeWindow():
 
         if s == True:
             messagebox.showinfo('Bill', f'Order Total --> {total_cost}')
+            print(orderRecipeList)
 
+            lg.addRecipeLog(orderRecipeList)
             # ADD REPORT CODE HERE
 
         inventory = rc.displayInventory()
@@ -345,15 +355,15 @@ def openRecipeWindow():
                 if aid == id:
                     if aq > q:
 
-                        print('id - ', id)
-                        print('aq =', aq)
-                        print('q = ', q)
+                        # print('id - ', id)
+                        # print('aq =', aq)
+                        # print('q = ', q)
                         ning = aq // q
-                        print('max ing - ', ning)
+                        # print('max ing - ', ning)
                         if ning < maxRecipeLimit:
                             maxRecipeLimit = ning
 
-                        print(maxRecipeLimit)
+                        # print(maxRecipeLimit)
                     else:
                         maxRecipeLimit = 0
                         breakflag = True
@@ -367,10 +377,10 @@ def openRecipeWindow():
         availableRecipeLabel.grid(
             row=0, column=2, padx=stock_unit_pad[0], pady=stock_unit_pad[1])
 
-        print('---- recipe need')
-        print(recipeNeedQuantity)
-        print(' ---- available')
-        print(availableQuantity)
+        # print('---- recipe need')
+        # print(recipeNeedQuantity)
+        # print(' ---- available')
+        # print(availableQuantity)
 
         recipeNeedQuantity = []
         availableQuantity = []
@@ -535,8 +545,19 @@ recipeWindowButton = Button(root, text='OPEN MENU',
                             command=openRecipeWindow, width=41, height=4)
 recipeWindowButton.place(x=x_start, y=y_start)
 
+
+def generateRep():
+    moneySpent, moneyEarned = lg.generateReport()
+
+    profit = moneyEarned - moneySpent
+
+    messagebox.showinfo(
+        "TODAY'S REPORT", f'Money Spent = {abs(moneySpent)} \nMoneyEarned = {moneyEarned} \nProfit = {profit}')
+
+
 y_start += 90
-generateReportButton = Button(root, text='GENERATE REPORT', width=41, height=4)
+generateReportButton = Button(
+    root, text='GENERATE REPORT', width=41, height=4, command=generateRep)
 generateReportButton.place(x=x_start, y=y_start)
 
 root.mainloop()
