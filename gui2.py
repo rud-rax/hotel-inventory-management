@@ -576,7 +576,7 @@ def openRecipeWindow():
 
     newRecipeButton = Button(
         recipeWindow, text='ADD RECIPE', height=7, width=12, command=openAddRecipeWindow, bg=colorPalette[1], fg=colorPalette[2], font=Ifont)
-    newRecipeButton.place(x=x_start + 100, y=y_start - 24)
+    newRecipeButton.place(x=x_start + 130, y=y_start - 24)
 
 
 y_start += 10
@@ -588,7 +588,7 @@ recipeWindowButton.place(x=x_start, y=y_start)
 def generateRep():
     moneySpent, moneyEarned = lg.generateReport()
 
-    profit = moneyEarned - moneySpent
+    profit = moneyEarned + moneySpent
 
     messagebox.showinfo(
         "TODAY'S REPORT", f'Money Spent = {abs(moneySpent)} \nMoneyEarned = {moneyEarned} \nProfit = {profit}')
