@@ -22,7 +22,6 @@ hotelconn = myc.connect(
 rc = ic.Recipe(hotelconn)
 
 # COLORS AND FONTS
-
 # colorPalette2 = ['4F091D', 'DD4A48', 'F5EEDC']
 # colorPalette1 = ['FF5C58', 'FE8F8F', '2D2424']
 colorPalette3 = ['191919', '31112C', 'F2FFE9']
