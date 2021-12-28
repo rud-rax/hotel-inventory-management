@@ -10,7 +10,7 @@ import recipeConnect as ric
 # DATABASE VARIABLES
 lhost = "localhost"
 luser = "root"
-lpasswd = "rudu101519"
+lpasswd = ''
 database_name = "hotel_database"
 
 # DATABASE CONNECTION
@@ -22,7 +22,14 @@ hotelconn = myc.connect(
 rc = ic.Recipe(hotelconn)
 
 # COLORS AND FONTS
-colorPalette = ['4F091D', 'DD4A48', 'F5EEDC', '97BFB4']
+
+# colorPalette2 = ['4F091D', 'DD4A48', 'F5EEDC']
+# colorPalette1 = ['FF5C58', 'FE8F8F', '2D2424']
+colorPalette3 = ['191919', '31112C', 'F2FFE9']
+# colorPalette4 = ['31112C', '065C6F', 'FAF3DD']
+# colorPalette5 = ['CEE5D0', 'F3F0D7', '5E454B']
+
+colorPalette = colorPalette3
 colorPalette = ['#'+col for col in colorPalette]
 Ifont = 'Helvetica'
 # bg=colorPalette[1], fg=colorPalette[2], font=Ifont
