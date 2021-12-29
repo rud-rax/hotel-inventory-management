@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
     lhost = "localhost"
     luser = "root"
-    lpasswd = "rudu101519"
+    lpasswd = ""
     database_name = "hotel_database"
 
     hotelconn = myc.connect(
